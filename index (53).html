@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Liderazgo en Movimiento · Prototipo de app</title>
+<meta name="description" content="Prototipo de la app de aprendizaje — NeuroWellness Learning" />
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;background:#F7F2EC}
+  *{box-sizing:border-box}
+</style>
+</head>
+<body>
+<div id="root" style="min-height:100vh;display:grid;place-items:center;font-family:Montserrat,system-ui,sans-serif;color:#6E6E6E">Cargando prototipo…</div>
+<script type="text/babel" data-presets="react">
+const { useState } = React;
+function mk(inner){
+  return function(p){
+    p = p || {};
+    var size = p.size || 18;
+    var rest = Object.assign({}, p);
+    delete rest.size; delete rest.color; delete rest.fill;
+    return React.createElement('svg', Object.assign({
+      width: size, height: size, viewBox: '0 0 24 24',
+      fill: p.fill || 'none', stroke: p.color || 'currentColor',
+      strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round',
+      dangerouslySetInnerHTML: { __html: inner }
+    }, rest));
+  };
+}
+const Flame = mk("<path d=\"M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4\"></path>");
+const Star = mk("<path d=\"M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z\"></path>");
+const Trophy = mk("<path d=\"M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978\"></path><path d=\"M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978\"></path><path d=\"M18 9h1.5a1 1 0 0 0 0-5H18\"></path><path d=\"M4 22h16\"></path><path d=\"M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z\"></path><path d=\"M6 9H4.5a1 1 0 0 1 0-5H6\"></path>");
+const Target = mk("<circle cx=\"12\" cy=\"12\" r=\"10\"></circle><circle cx=\"12\" cy=\"12\" r=\"6\"></circle><circle cx=\"12\" cy=\"12\" r=\"2\"></circle>");
+const Users = mk("<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"></path><path d=\"M16 3.128a4 4 0 0 1 0 7.744\"></path><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"></path><circle cx=\"9\" cy=\"7\" r=\"4\"></circle>");
+const User = mk("<path d=\"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2\"></path><circle cx=\"12\" cy=\"7\" r=\"4\"></circle>");
+const Eye = mk("<path d=\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"></path><circle cx=\"12\" cy=\"12\" r=\"3\"></circle>");
+const CheckCircle2 = mk("<circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"m9 12 2 2 4-4\"></path>");
+const Lock = mk("<rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\"></rect><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"></path>");
+const Play = mk("<path d=\"M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z\"></path>");
+const TrendingUp = mk("<path d=\"M16 7h6v6\"></path><path d=\"m22 7-8.5 8.5-5-5L2 17\"></path>");
+const Award = mk("<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\"></path><circle cx=\"12\" cy=\"8\" r=\"6\"></circle>");
+const ChevronRight = mk("<path d=\"m9 18 6-6-6-6\"></path>");
+const BookOpen = mk("<path d=\"M12 7v14\"></path><path d=\"M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z\"></path>");
+const Zap = mk("<path d=\"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z\"></path>");
+const Compass = mk("<circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z\"></path>");
+const MessageCircle = mk("<path d=\"M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719\"></path>");
+const Brain = mk("<path d=\"M12 18V5\"></path><path d=\"M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4\"></path><path d=\"M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5\"></path><path d=\"M17.997 5.125a4 4 0 0 1 2.526 5.77\"></path><path d=\"M18 18a4 4 0 0 0 2-7.464\"></path><path d=\"M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517\"></path><path d=\"M6 18a4 4 0 0 1-2-7.464\"></path><path d=\"M6.003 5.125a4 4 0 0 0-2.526 5.77\"></path>");
+const Send = mk("<path d=\"M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z\"></path><path d=\"m21.854 2.147-10.94 10.939\"></path>");
+const Sparkles = mk("<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\"></path><path d=\"M20 2v4\"></path><path d=\"M22 4h-4\"></path><circle cx=\"4\" cy=\"20\" r=\"2\"></circle>");
+const Medal = mk("<path d=\"M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15\"></path><path d=\"M11 12 5.12 2.2\"></path><path d=\"m13 12 5.88-9.8\"></path><path d=\"M8 7h8\"></path><circle cx=\"12\" cy=\"17\" r=\"5\"></circle><path d=\"M12 18v-2h-.5\"></path>");
+const BarChart3 = mk("<path d=\"M3 3v16a2 2 0 0 0 2 2h16\"></path><path d=\"M18 17V9\"></path><path d=\"M13 17V5\"></path><path d=\"M8 17v-3\"></path>");
+const Bot = mk("<path d=\"M12 8V4H8\"></path><rect width=\"16\" height=\"12\" x=\"4\" y=\"8\" rx=\"2\"></rect><path d=\"M2 14h2\"></path><path d=\"M20 14h2\"></path><path d=\"M15 13v2\"></path><path d=\"M9 13v2\"></path>");
+const LifeBuoy = mk("<circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"m4.93 4.93 4.24 4.24\"></path><path d=\"m14.83 9.17 4.24-4.24\"></path><path d=\"m14.83 14.83 4.24 4.24\"></path><path d=\"m9.17 14.83-4.24 4.24\"></path><circle cx=\"12\" cy=\"12\" r=\"4\"></circle>");
+const AlertTriangle = mk("<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"></path><path d=\"M12 9v4\"></path><path d=\"M12 17h.01\"></path>");
+const Headphones = mk("<path d=\"M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3\"></path>");
+const ShieldCheck = mk("<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"></path><path d=\"m9 12 2 2 4-4\"></path>");
+const ArrowUpRight = mk("<path d=\"M7 7h10v10\"></path><path d=\"M7 17 17 7\"></path>");
+
+const WINE = "#7A1626", WINE_DK = "#5E101C", GOLD = "#D89B2C", GOLD_LT = "#EBC77E";
+const INK = "#2A2A2A", GRAY = "#6E6E6E", PAPER = "#F7F2EC", LINE = "#EADFD0";
+const FONT = "'Montserrat', ui-sans-serif, system-ui, sans-serif";
+
+const COMP = {
+  autogestion: { label: "Autogestión", icon: Compass, color: GOLD },
+  autonomia: { label: "Autonomía", icon: Zap, color: WINE },
+  servicio: { label: "Servicio y agilidad", icon: TrendingUp, color: "#9B6D80" },
+  agile: { label: "Agile coach", icon: MessageCircle, color: "#7C9A86" },
+};
+const t = (size, weight, color) => ({ fontSize: size, fontWeight: weight, color });
+const card = { background: "#fff", border: `1px solid ${LINE}`, borderRadius: 16, padding: 16, boxShadow: "0 6px 16px rgba(0,0,0,.05)" };
+
+function App() {
+  const [role, setRole] = useState("lider");
+  return (
+    <div style={{ fontFamily: FONT, background: PAPER, minHeight: "100vh", color: INK }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        @keyframes pulse2 { 0%,100%{ box-shadow:0 0 0 0 rgba(122,22,38,.45);} 50%{ box-shadow:0 0 0 10px rgba(122,22,38,0);} }
+        @keyframes pop { 0%{ transform:scale(.85); opacity:0;} 100%{ transform:scale(1); opacity:1;} }
+        @keyframes rise { from{ transform:translateY(8px); opacity:0;} to{ transform:translateY(0); opacity:1;} }
+        .pulse{ animation:pulse2 2s infinite; } .rise{ animation:rise .4s ease both; } .pop{ animation:pop .3s ease both; }
+      `}</style>
+
+      <header style={{ background: WINE_DK, color: "#fff", padding: "12px 20px" }} className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-3">
+          <div style={t(15, 800, "#fff")}><span style={{ fontWeight: 300 }}>neuro</span>Wellness</div>
+          <div style={{ width: 1, height: 22, background: "rgba(255,255,255,.25)" }} />
+          <div style={t(13, 700, GOLD_LT)}>Liderazgo en Movimiento</div>
+        </div>
+        <span style={{ background: GOLD, color: WINE_DK, fontWeight: 800, fontSize: 10, letterSpacing: 1, padding: "4px 8px" }} className="rounded-full">PROTOTIPO</span>
+      </header>
+
+      <div style={{ borderBottom: `1px solid ${LINE}`, padding: "16px 20px" }} className="flex items-center gap-2 flex-wrap">
+        {[["lider", "Vista del líder", User], ["coach", "Vista del coach", Users], ["direccion", "Vista de dirección", Eye]].map(([k, label, Ic]) => {
+          const a = role === k;
+          return (
+            <button key={k} onClick={() => setRole(k)}
+              style={{ background: a ? WINE : "#fff", color: a ? "#fff" : GRAY, border: `1.5px solid ${a ? WINE : LINE}`, fontWeight: 700, fontSize: 13, padding: "8px 16px" }}
+              className="flex items-center gap-2 rounded-full">
+              <Ic size={16} /> {label}
+            </button>
+          );
+        })}
+      </div>
+
+      <main style={{ padding: 20 }}>
+        {role === "lider" && <LiderView />}
+        {role === "coach" && <CoachView />}
+        {role === "direccion" && <DireccionView />}
+      </main>
+    </div>
+  );
+}
+
+const typeMeta = {
+  hito: { label: "Hito", icon: Medal }, taller: { label: "Taller experiencial", icon: BookOpen },
+  reto: { label: "Reto individual", icon: Target }, "reto-col": { label: "Reto colectivo", icon: Users },
+};
+
+/* ===================== LÍDER ===================== */
+function LiderView() {
+  const base = [
+    { id: 1, label: "Diagnóstico inicial", type: "hito", state: "done" },
+    { id: 2, label: "Fundamentos de autogestión", type: "taller", state: "done" },
+    { id: 3, label: "Delega una decisión real", type: "reto", state: "current" },
+    { id: 4, label: "Confianza y delegación", type: "taller", state: "locked" },
+    { id: 5, label: "Hábito sostenible", type: "hito", state: "locked" },
+  ];
+  const [nodes, setNodes] = useState(base);
+  const [points, setPoints] = useState(190);
+  const [help, setHelp] = useState(null); // null | 'tutor' | 'coach'
+  const [coachSent, setCoachSent] = useState(false);
+  const [toast, setToast] = useState(null);
+  const flash = (m) => { setToast(m); setTimeout(() => setToast(null), 2400); };
+  const current = nodes.find((n) => n.state === "current");
+  const progress = Math.round((nodes.filter((n) => n.state === "done").length / nodes.length) * 100);
+
+  const hecho = () => {
+    if (!current) return;
+    setPoints((p) => p + 100);
+    setNodes((prev) => {
+      const idx = prev.findIndex((n) => n.id === current.id);
+      return prev.map((n, i) => (i === idx ? { ...n, state: "done" } : i === idx + 1 ? { ...n, state: "current" } : n));
+    });
+    flash("+100 pts · ¡bien hecho!");
+  };
+
+  return (
+    <div className="rise" style={{ maxWidth: 980, margin: "0 auto" }}>
+      <div className="flex flex-wrap gap-5 justify-center">
+        {/* PHONE */}
+        <div style={{ width: 336 }}>
+          <div style={{ background: WINE_DK, borderRadius: 36, padding: 11, boxShadow: "0 24px 50px rgba(94,16,28,.28)" }}>
+            <div style={{ background: "#FBF6F0", borderRadius: 26, overflow: "hidden" }}>
+              <div style={{ background: WINE_DK, width: 110, height: 20, borderRadius: "0 0 13px 13px", margin: "0 auto" }} />
+              <div style={{ padding: "12px 18px 14px" }}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div style={{ background: GOLD, color: "#fff", fontWeight: 800, fontSize: 13, width: 34, height: 34 }} className="rounded-full grid place-items-center">CR</div>
+                    <div><div style={t(12.5, 700, INK)}>Carla Ramírez</div><div style={{ ...t(9.5, 500, GRAY), marginTop: 1 }}>Ruta de Autogestión</div></div>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-1" style={{ color: GOLD }}><Flame size={15} fill={GOLD} /><span style={t(12.5, 800, GOLD)}>12</span></div>
+                    <div className="flex items-center gap-1" style={{ color: WINE }}><Star size={15} fill={GOLD} stroke={GOLD} /><span style={t(12.5, 800, WINE)}>{points}</span></div>
+                  </div>
+                </div>
+                <div style={{ marginTop: 11 }}>
+                  <div className="flex justify-between" style={{ ...t(9.5, 600, GRAY), marginBottom: 4 }}><span>Mi ruta</span><span>{progress}%</span></div>
+                  <div style={{ background: LINE, height: 8, borderRadius: 8 }}><div style={{ width: `${progress}%`, background: `linear-gradient(90deg,${GOLD},${GOLD_LT})`, height: 8, borderRadius: 8, transition: "width .5s" }} /></div>
+                  <div className="flex items-center gap-1" style={{ marginTop: 7 }}>
+                    <Bot size={12} color={WINE} /><span style={t(9, 600, WINE)}>Personalizada por tu diagnóstico IA</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ padding: "0 18px 8px", maxHeight: 320, overflowY: "auto" }}>
+                {nodes.map((n, i) => {
+                  const off = i % 2 === 0 ? -50 : 50;
+                  const isDone = n.state === "done", isCur = n.state === "current";
+                  return (
+                    <div key={n.id} className="relative" style={{ height: 62 }}>
+                      {i < nodes.length - 1 && (
+                        <svg width="100%" height="62" className="absolute inset-0" style={{ zIndex: 0 }}>
+                          <line x1={`calc(50% + ${off}px)`} y1="44" x2={`calc(50% + ${i % 2 === 0 ? 50 : -50}px)`} y2="76" stroke="#E0D2BE" strokeWidth="3" strokeDasharray="4 4" />
+                        </svg>
+                      )}
+                      <div className="absolute flex flex-col items-center" style={{ left: "50%", transform: `translateX(calc(-50% + ${off}px))`, zIndex: 1 }}>
+                        <div className={isCur ? "pulse" : ""} style={{ width: 46, height: 46, borderRadius: "50%", background: isDone ? GOLD : isCur ? WINE : "#E6DAC8", display: "grid", placeItems: "center", color: "#fff", border: isCur ? `3px solid ${GOLD}` : "3px solid #fff", boxShadow: isDone || isCur ? "0 4px 10px rgba(0,0,0,.15)" : "none" }}>
+                          {isDone ? <CheckCircle2 size={20} /> : isCur ? <Play size={18} fill="#fff" /> : <Lock size={16} />}
+                        </div>
+                        <div style={{ ...t(8.5, isCur ? 700 : 600, isCur ? WINE : isDone ? INK : "#B9A98F"), maxWidth: 116, textAlign: "center", marginTop: 4, lineHeight: 1.15 }}>{n.label}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div style={{ borderTop: `1px solid ${LINE}`, background: "#fff", padding: "11px 0" }} className="flex justify-around">
+                {[[Compass, "Ruta", true], [Target, "Retos", false], [LifeBuoy, "Ayuda", false], [User, "Perfil", false]].map(([Ic, l, a], i) => (
+                  <div key={i} className="flex flex-col items-center gap-1" style={{ color: a ? WINE : "#B9A98F" }}>
+                    <Ic size={17} /><span style={t(8.5, a ? 700 : 500, a ? WINE : "#B9A98F")}>{l}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* PANEL: foco + ayuda (ligero) */}
+        <div style={{ flex: 1, minWidth: 300, maxWidth: 500 }} className="flex flex-col gap-3">
+          {/* foco actual: un solo reto */}
+          <div style={card}>
+            <div className="flex items-center gap-2" style={{ marginBottom: 6 }}>
+              <Target size={15} color={GOLD} />
+              <span style={{ ...t(10, 800, GOLD), textTransform: "uppercase", letterSpacing: .6 }}>Tu foco de esta semana</span>
+              <span style={{ ...t(11, 800, GRAY), marginLeft: "auto" }}>+100 pts</span>
+            </div>
+            {current ? (
+              <>
+                <div style={{ ...t(16, 800, INK), marginBottom: 5 }}>{current.label}</div>
+                <p style={{ ...t(12.5, 400, GRAY), lineHeight: 1.45, marginBottom: 12 }}>
+                  Delega una decisión que sueles tomar tú. Define el marco, acompaña sin retomar el control y registra cómo te fue. <b style={{ color: INK }}>Un paso a la vez.</b>
+                </p>
+                <button onClick={hecho} style={{ background: WINE, color: "#fff", fontWeight: 800, fontSize: 13, width: "100%", padding: "11px 0" }} className="rounded-xl flex items-center justify-center gap-2">
+                  <CheckCircle2 size={15} /> Marcar como completado
+                </button>
+              </>
+            ) : (
+              <div className="flex items-center gap-2" style={{ padding: "6px 0" }}>
+                <Trophy size={18} color={GOLD} /><span style={t(13, 700, WINE)}>¡Vas al día con tu ruta!</span>
+              </div>
+            )}
+          </div>
+
+          {/* ayuda: tutor virtual + coach */}
+          <div style={card}>
+            <div className="flex items-center gap-2" style={{ marginBottom: 4 }}>
+              <LifeBuoy size={15} color={WINE} />
+              <span style={{ ...t(10, 800, WINE), textTransform: "uppercase", letterSpacing: .6 }}>¿Necesitas ayuda?</span>
+            </div>
+            <p style={{ ...t(11.5, 400, GRAY), lineHeight: 1.4, marginBottom: 12 }}>Solo si lo necesitas. Tú eliges cómo.</p>
+            <div className="flex gap-2.5" style={{ marginBottom: help ? 12 : 0 }}>
+              <button onClick={() => { setHelp(help === "tutor" ? null : "tutor"); }}
+                style={{ flex: 1, background: help === "tutor" ? WINE : PAPER, color: help === "tutor" ? "#fff" : INK, border: `1.5px solid ${help === "tutor" ? WINE : LINE}`, borderRadius: 12, padding: "12px 10px" }} className="flex flex-col items-center gap-1.5">
+                <Bot size={22} color={help === "tutor" ? GOLD_LT : WINE} />
+                <span style={t(12, 700, help === "tutor" ? "#fff" : INK)}>Tutor virtual</span>
+                <span style={t(9.5, 500, help === "tutor" ? "#F0DCC9" : GRAY)}>respuesta al instante</span>
+              </button>
+              <button onClick={() => { setHelp(help === "coach" ? null : "coach"); setCoachSent(false); }}
+                style={{ flex: 1, background: help === "coach" ? WINE : PAPER, color: help === "coach" ? "#fff" : INK, border: `1.5px solid ${help === "coach" ? WINE : LINE}`, borderRadius: 12, padding: "12px 10px" }} className="flex flex-col items-center gap-1.5">
+                <Headphones size={22} color={help === "coach" ? GOLD_LT : WINE} />
+                <span style={t(12, 700, help === "coach" ? "#fff" : INK)}>Hablar con mi coach</span>
+                <span style={t(9.5, 500, help === "coach" ? "#F0DCC9" : GRAY)}>acompañamiento humano</span>
+              </button>
+            </div>
+
+            {help === "tutor" && (
+              <div className="pop" style={{ background: PAPER, borderRadius: 12, padding: 12 }}>
+                <div className="flex items-center gap-2" style={{ marginBottom: 8 }}>
+                  <Bot size={15} color={WINE} /><span style={t(11, 700, WINE)}>Tutor virtual</span>
+                  <span style={{ ...t(9, 600, "#5B8C6E"), marginLeft: "auto" }}>● en línea</span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <div style={{ background: WINE, color: "#fff", borderRadius: "12px 12px 3px 12px", padding: "8px 11px", alignSelf: "flex-end", maxWidth: "85%" }}>
+                    <span style={t(11.5, 500, "#fff")}>No sé cómo empezar a delegar sin sentir que pierdo el control.</span>
+                  </div>
+                  <div style={{ background: "#fff", border: `1px solid ${LINE}`, borderRadius: "12px 12px 12px 3px", padding: "8px 11px", alignSelf: "flex-start", maxWidth: "90%" }}>
+                    <span style={t(11.5, 500, INK)}>Es muy común. Empieza por una decisión pequeña y reversible: define el resultado que esperas y deja el “cómo” a tu equipo. ¿Te doy un ejemplo para tu caso?</span>
+                  </div>
+                </div>
+                <div className="flex gap-2" style={{ marginTop: 10 }}>
+                  <div style={{ flex: 1, background: "#fff", border: `1px solid ${LINE}`, borderRadius: 20, padding: "7px 12px" }}><span style={t(11, 400, "#B9A98F")}>Escribe tu duda…</span></div>
+                  <div style={{ background: GOLD, borderRadius: "50%", width: 32, height: 32 }} className="grid place-items-center"><Send size={14} color={WINE_DK} /></div>
+                </div>
+              </div>
+            )}
+
+            {help === "coach" && (
+              <div className="pop" style={{ background: PAPER, borderRadius: 12, padding: 14 }}>
+                {coachSent ? (
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 size={18} color="#5B8C6E" style={{ marginTop: 1, flexShrink: 0 }} />
+                    <span style={t(12, 500, INK)}>Tu coach <b>Ana Méndez</b> recibió tu solicitud y te contactará. Verá tu avance en su panel para acompañarte mejor.</span>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2" style={{ marginBottom: 8 }}>
+                      <div style={{ background: WINE, color: "#fff", fontWeight: 800, fontSize: 10, width: 26, height: 26 }} className="rounded-full grid place-items-center">AM</div>
+                      <span style={t(12, 700, INK)}>Ana Méndez · tu coach</span>
+                    </div>
+                    <p style={{ ...t(11.5, 400, GRAY), lineHeight: 1.4, marginBottom: 10 }}>Cuéntale en una línea qué necesitas y te contactará.</p>
+                    <button onClick={() => setCoachSent(true)} style={{ background: WINE, color: "#fff", fontWeight: 800, fontSize: 12.5, width: "100%", padding: "10px 0" }} className="rounded-xl flex items-center justify-center gap-2">
+                      Solicitar acompañamiento <Send size={14} />
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {toast && <div className="pop" style={{ position: "fixed", left: "50%", bottom: 32, transform: "translateX(-50%)", background: GOLD, color: WINE_DK, fontWeight: 800, fontSize: 13, padding: "10px 18px", borderRadius: 30, boxShadow: "0 10px 24px rgba(0,0,0,.2)", zIndex: 50 }}>{toast}</div>}
+      <p style={{ ...t(12.5, 600, WINE), textAlign: "center", marginTop: 18 }}>
+        Tu ruta la crea el diagnóstico IA. Avanzas a tu ritmo y, si lo necesitas, pides ayuda al tutor virtual o a tu coach.
+      </p>
+    </div>
+  );
+}
+
+/* ===================== COACH ===================== */
+function CoachView() {
+  const leaders = [
+    { name: "Carla Ramírez", role: "Gerente", comp: "autogestion", prog: 50, streak: 12, status: "activo", last: "Hoy", asked: true },
+    { name: "Diego Salas", role: "Subdirector", comp: "autonomia", prog: 72, streak: 8, status: "activo", last: "Ayer", asked: false },
+    { name: "Marta Lugo", role: "Gerente", comp: "servicio", prog: 30, streak: 2, status: "rezagado", last: "Hace 6 días", asked: true },
+    { name: "Iván Torres", role: "Director", comp: "agile", prog: 64, streak: 15, status: "activo", last: "Hoy", asked: false },
+    { name: "Sofía Pérez", role: "Gerente", comp: "autogestion", prog: 18, streak: 0, status: "rezagado", last: "Hace 9 días", asked: false },
+  ];
+  const [sel, setSel] = useState(leaders[0]);
+  const [fb, setFb] = useState("");
+  const [sent, setSent] = useState(false);
+  const [escalating, setEscalating] = useState(false);
+  const [escalated, setEscalated] = useState(false);
+  const [reason, setReason] = useState("");
+  const ini = (n) => n.split(" ").map((w) => w[0]).join("");
+  const pick = (l) => { setSel(l); setSent(false); setFb(""); setEscalating(false); setEscalated(false); setReason(""); };
+
+  return (
+    <div className="rise mx-auto" style={{ maxWidth: 1080 }}>
+      <div style={{ marginBottom: 16 }}>
+        <h2 style={t(22, 800, INK)}>Panel del coach</h2>
+        <p style={t(13, 400, GRAY)}>Acompañas a tus líderes cuando lo piden. Si un caso te supera, lo escalas a María Urdaneta.</p>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3" style={{ marginBottom: 20 }}>
+        {[["Líderes a cargo", "10", Users], ["Solicitudes de ayuda", "2", LifeBuoy], ["Activos esta semana", "7", Zap], ["Necesitan empuje", "2", Bell2]].map(([l, v, Ic], i) => (
+          <div key={i} style={{ background: "#fff", border: `1px solid ${LINE}`, borderRadius: 14, padding: 12 }} className="flex items-center gap-3">
+            <div style={{ background: PAPER, width: 40, height: 40 }} className="rounded-xl grid place-items-center"><Ic size={18} color={WINE} /></div>
+            <div><div style={t(20, 800, WINE)}>{v}</div><div style={{ ...t(11, 400, GRAY), marginTop: 2 }}>{l}</div></div>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid gap-4" style={{ gridTemplateColumns: "1.15fr 1fr" }}>
+        <div style={{ background: "#fff", border: `1px solid ${LINE}`, borderRadius: 16, padding: 16 }}>
+          <div style={{ ...t(13, 700, INK), marginBottom: 12 }}>Mis líderes</div>
+          <div className="flex flex-col gap-2">
+            {leaders.map((l) => {
+              const C = COMP[l.comp]; const active = sel.name === l.name; const reza = l.status === "rezagado";
+              return (
+                <button key={l.name} onClick={() => pick(l)}
+                  style={{ background: active ? PAPER : "#fff", border: `1.5px solid ${active ? GOLD : LINE}`, borderRadius: 12, padding: 12, textAlign: "left" }} className="flex items-center gap-3">
+                  <div style={{ background: C.color, color: "#fff", fontWeight: 800, fontSize: 12, width: 36, height: 36, flexShrink: 0 }} className="rounded-full grid place-items-center">{ini(l.name)}</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span style={t(13, 700, INK)} className="truncate">{l.name}</span>
+                      {l.asked && <span style={{ background: "#FBEFD6", color: "#9A6A12", fontWeight: 700, fontSize: 9, padding: "1px 6px" }} className="rounded-full flex items-center gap-1"><LifeBuoy size={9} />pidió ayuda</span>}
+                      {reza && !l.asked && <span style={{ background: "#F6E2DD", color: WINE, fontWeight: 700, fontSize: 9, padding: "1px 6px" }} className="rounded-full">requiere empuje</span>}
+                    </div>
+                    <div style={t(11, 400, GRAY)}>{l.role} · {C.label}</div>
+                    <div className="flex items-center gap-2" style={{ marginTop: 6 }}>
+                      <div style={{ background: LINE, height: 6, borderRadius: 6 }} className="flex-1"><div style={{ width: `${l.prog}%`, background: reza ? "#C99A4A" : C.color, height: 6, borderRadius: 6 }} /></div>
+                      <span style={{ ...t(10, 700, GRAY), width: 30, textAlign: "right" }}>{l.prog}%</span>
+                    </div>
+                  </div>
+                  <ChevronRight size={16} color="#C9B89C" />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div style={{ background: WINE, color: "#fff", borderRadius: 16, padding: 18 }} className="flex flex-col">
+          <div className="flex items-center gap-3" style={{ marginBottom: 12 }}>
+            <div style={{ background: GOLD, color: "#fff", fontWeight: 800, fontSize: 14, width: 42, height: 42 }} className="rounded-full grid place-items-center">{ini(sel.name)}</div>
+            <div><div style={t(15, 800, "#fff")}>{sel.name}</div><div style={t(11, 500, "#F0DCC9")}>{sel.role} · {COMP[sel.comp].label}</div></div>
+            {sel.asked && <span style={{ background: GOLD, color: WINE_DK, fontWeight: 800, fontSize: 9.5, padding: "3px 8px", marginLeft: "auto" }} className="rounded-full">pidió ayuda</span>}
+          </div>
+          <div style={{ background: "rgba(0,0,0,.12)", borderRadius: 10, padding: 11, marginBottom: 12 }}>
+            <div style={{ ...t(9.5, 700, GOLD_LT), textTransform: "uppercase", letterSpacing: .5, marginBottom: 4 }}>Lo que ves de su avance</div>
+            <div style={{ ...t(11.5, 500, "#fff"), lineHeight: 1.4 }}>Va en “Delega una decisión”. En su último reto delegó, pero retomó el control al surgir una duda.</div>
+          </div>
+
+          {escalated ? (
+            <div style={{ background: "rgba(255,255,255,.12)", borderRadius: 10, padding: 14 }}>
+              <div className="flex items-center gap-2" style={{ marginBottom: 6 }}><ShieldCheck size={17} color={GOLD_LT} /><span style={t(12.5, 700, "#fff")}>Caso escalado a María Urdaneta</span></div>
+              <div style={t(11.5, 500, "#F0DCC9")}>Lo revisará y te orientará sobre cómo acompañar a {sel.name.split(" ")[0]}. Te avisaremos cuando responda.</div>
+            </div>
+          ) : sent ? (
+            <div style={{ background: "rgba(255,255,255,.12)", borderRadius: 10, padding: 14 }}>
+              <div className="flex items-center gap-2" style={{ marginBottom: 8 }}><CheckCircle2 size={16} color={GOLD_LT} /><span style={t(12.5, 700, "#fff")}>Acompañamiento enviado a {sel.name.split(" ")[0]}</span></div>
+              <button onClick={() => setEscalating(true)} style={{ background: "transparent", color: GOLD_LT, fontWeight: 700, fontSize: 11.5, textDecoration: "underline" }} className="flex items-center gap-1">
+                <ArrowUpRight size={13} /> ¿No sabes cómo seguir? Escalar a María
+              </button>
+            </div>
+          ) : escalating ? (
+            <div className="pop" style={{ background: "rgba(0,0,0,.15)", borderRadius: 10, padding: 13 }}>
+              <div className="flex items-center gap-2" style={{ marginBottom: 6 }}><AlertTriangle size={15} color={GOLD_LT} /><span style={{ ...t(10, 700, GOLD_LT), textTransform: "uppercase", letterSpacing: .5 }}>Escalar a María Urdaneta</span></div>
+              <p style={{ ...t(11, 400, "#F0DCC9"), lineHeight: 1.4, marginBottom: 8 }}>Cuando un caso te supera, María lo revisa y decide el enfoque.</p>
+              <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={2} placeholder="¿Qué te está costando acompañar?"
+                style={{ background: "#fff", color: INK, borderRadius: 10, resize: "none", width: "100%", padding: 9, fontSize: 12, fontFamily: FONT, outline: "none", border: "none" }} />
+              <div className="flex gap-2" style={{ marginTop: 8 }}>
+                <button onClick={() => setEscalating(false)} style={{ flex: 1, background: "transparent", color: "#F0DCC9", border: "1px solid rgba(255,255,255,.3)", fontWeight: 700, fontSize: 12, padding: "9px 0" }} className="rounded-xl">Cancelar</button>
+                <button onClick={() => setEscalated(true)} style={{ flex: 1, background: GOLD, color: WINE_DK, fontWeight: 800, fontSize: 12, padding: "9px 0" }} className="rounded-xl flex items-center justify-center gap-1"><ArrowUpRight size={14} /> Escalar</button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div style={{ ...t(9.5, 700, GOLD_LT), textTransform: "uppercase", letterSpacing: .5, marginBottom: 4 }}>Tu acompañamiento</div>
+              <textarea value={fb} onChange={(e) => setFb(e.target.value)} rows={3} placeholder="Escribe una observación o una pregunta poderosa para su próximo paso…"
+                style={{ background: "#fff", color: INK, borderRadius: 10, resize: "none", width: "100%", padding: 9, fontSize: 12, fontFamily: FONT, outline: "none", border: "none", lineHeight: 1.4 }} />
+              <div className="flex gap-2" style={{ marginTop: 10 }}>
+                <button onClick={() => fb.trim() && setSent(true)} style={{ flex: 1, background: GOLD, color: WINE_DK, fontWeight: 800, fontSize: 12.5, padding: "10px 0" }} className="rounded-xl flex items-center justify-center gap-2">Enviar <Send size={14} /></button>
+                <button onClick={() => setEscalating(true)} style={{ background: "rgba(255,255,255,.12)", color: "#fff", fontWeight: 700, fontSize: 12, padding: "10px 12px" }} className="rounded-xl flex items-center justify-center gap-1" title="Escalar a María Urdaneta"><ArrowUpRight size={15} /> Escalar</button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+      <p style={{ ...t(12.5, 600, WINE), textAlign: "center", marginTop: 16 }}>El coach acompaña; no arma la ruta. Si un caso lo supera, lo escala a María Urdaneta.</p>
+    </div>
+  );
+}
+
+/* ===================== DIRECCIÓN ===================== */
+function DireccionView() {
+  const byComp = [{ k: "autogestion", val: 58 }, { k: "autonomia", val: 71 }, { k: "servicio", val: 44 }, { k: "agile", val: 63 }];
+  const cohorts = [
+    { name: "Grupo A · Directores", n: 25, prog: 68, ret: 92 },
+    { name: "Grupo B · Subdirectores", n: 25, prog: 61, ret: 88 },
+    { name: "Grupo C · Gerentes", n: 25, prog: 54, ret: 79 },
+    { name: "Grupo D · Gerentes", n: 25, prog: 49, ret: 74 },
+  ];
+  const initialCases = [
+    { id: 1, leader: "Marta Lugo", coach: "Ana Méndez", note: "No logra que su equipo le dé feedback honesto; el coach pide orientación.", decided: false },
+    { id: 2, leader: "Sofía Pérez", coach: "Luis Prada", note: "Desmotivación sostenida; lleva 9 días sin actividad.", decided: false },
+  ];
+  const [cases, setCases] = useState(initialCases);
+  const decide = (id) => setCases((c) => c.map((x) => (x.id === id ? { ...x, decided: true } : x)));
+
+  return (
+    <div className="rise mx-auto" style={{ maxWidth: 1080 }}>
+      <div style={{ marginBottom: 16 }}>
+        <h2 style={t(22, 800, INK)}>Panorama de dirección</h2>
+        <p style={t(13, 400, GRAY)}>Ves todo el avance y decides los casos que los coaches escalan.</p>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3" style={{ marginBottom: 16 }}>
+        {[["Participación", "94%", "+6 vs. inicio", TrendingUp], ["Retos completados", "1.248", "esta cohorte", Target], ["Retención activa", "83%", "líderes constantes", Flame], ["Casos escalados", String(cases.filter((c) => !c.decided).length), "por resolver", AlertTriangle]].map(([l, v, sub, Ic], i) => (
+          <div key={i} style={{ background: i === 0 ? WINE : "#fff", border: `1px solid ${i === 0 ? WINE : LINE}`, borderRadius: 16, padding: 16 }}>
+            <Ic size={18} color={i === 0 ? GOLD_LT : GOLD} />
+            <div style={{ ...t(28, 900, i === 0 ? "#fff" : INK), marginTop: 8, lineHeight: 1 }}>{v}</div>
+            <div style={{ ...t(12, 700, i === 0 ? "#fff" : INK), marginTop: 4 }}>{l}</div>
+            <div style={{ ...t(10.5, 400, i === 0 ? "#F0DCC9" : GRAY), marginTop: 2 }}>{sub}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* casos escalados */}
+      <div style={{ ...card, padding: 18, marginBottom: 16 }}>
+        <div className="flex items-center gap-2" style={{ marginBottom: 4 }}>
+          <AlertTriangle size={16} color={WINE} /><span style={t(13, 700, INK)}>Casos escalados por coaches</span>
+        </div>
+        <div style={{ ...t(11, 400, GRAY), marginBottom: 12 }}>Solo lo que requiere tu criterio. Tú decides el enfoque y el coach lo aplica.</div>
+        <div className="grid md:grid-cols-2 gap-3">
+          {cases.map((c) => (
+            <div key={c.id} style={{ border: `1px solid ${c.decided ? "#CFE0D4" : LINE}`, background: c.decided ? "#F2F7F3" : "#fff", borderRadius: 12, padding: 13 }}>
+              <div className="flex items-center justify-between" style={{ marginBottom: 6 }}>
+                <span style={t(12.5, 700, INK)}>{c.leader}</span>
+                <span style={t(10, 500, GRAY)}>coach: {c.coach}</span>
+              </div>
+              <p style={{ ...t(11.5, 400, GRAY), lineHeight: 1.4, marginBottom: 10 }}>{c.note}</p>
+              {c.decided ? (
+                <div className="flex items-center gap-2"><CheckCircle2 size={15} color="#5B8C6E" /><span style={t(11.5, 700, "#3F6B52")}>Enfoque enviado al coach</span></div>
+              ) : (
+                <button onClick={() => decide(c.id)} style={{ background: WINE, color: "#fff", fontWeight: 800, fontSize: 11.5, padding: "8px 14px" }} className="rounded-xl flex items-center gap-1.5"><ShieldCheck size={14} /> Revisar y decidir</button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <div style={{ background: "#fff", border: `1px solid ${LINE}`, borderRadius: 16, padding: 20 }}>
+          <div style={t(13, 700, INK)}>Avance por competencia</div>
+          <div style={{ ...t(11, 400, GRAY), marginBottom: 16, marginTop: 2 }}>Dónde el liderazgo crece y dónde reforzar.</div>
+          <div className="flex flex-col" style={{ gap: 14 }}>
+            {byComp.map((b) => {
+              const C = COMP[b.k];
+              return (
+                <div key={b.k}>
+                  <div className="flex items-center justify-between" style={{ marginBottom: 4 }}>
+                    <div className="flex items-center gap-2">{React.createElement(C.icon, { size: 14, color: C.color })}<span style={t(12, 600, INK)}>{C.label}</span></div>
+                    <span style={t(12, 800, C.color)}>{b.val}%</span>
+                  </div>
+                  <div style={{ background: LINE, height: 9, borderRadius: 9 }}><div style={{ width: `${b.val}%`, background: C.color, height: 9, borderRadius: 9, transition: "width .6s" }} /></div>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ background: PAPER, borderRadius: 10, padding: 12, marginTop: 16 }} className="flex gap-2 items-start">
+            <Brain size={15} color={WINE} style={{ marginTop: 1, flexShrink: 0 }} />
+            <div style={t(11, 400, INK)}><b style={{ color: WINE }}>Lectura con IA:</b> Servicio y agilidad es la brecha mayor. El diagnóstico ya priorizó este tema en las rutas de los grupos C y D.</div>
+          </div>
+        </div>
+        <div style={{ background: "#fff", border: `1px solid ${LINE}`, borderRadius: 16, padding: 20 }}>
+          <div style={t(13, 700, INK)}>Por grupo</div>
+          <div style={{ ...t(11, 400, GRAY), marginBottom: 16, marginTop: 2 }}>100 líderes · 4 grupos de 25.</div>
+          <div className="flex flex-col" style={{ gap: 10 }}>
+            {cohorts.map((c) => (
+              <div key={c.name} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: 12 }}>
+                <div className="flex items-center justify-between" style={{ marginBottom: 6 }}><span style={t(12, 700, INK)}>{c.name}</span><span style={t(10, 400, GRAY)}>{c.n} líderes</span></div>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <div className="flex justify-between" style={{ ...t(9.5, 600, GRAY), marginBottom: 3 }}><span>Avance</span><span>{c.prog}%</span></div>
+                    <div style={{ background: LINE, height: 7, borderRadius: 7 }}><div style={{ width: `${c.prog}%`, background: GOLD, height: 7, borderRadius: 7 }} /></div>
+                  </div>
+                  <div style={{ background: PAPER, borderRadius: 8, padding: "4px 10px", textAlign: "center" }}>
+                    <div style={t(13, 800, WINE)}>{c.ret}%</div><div style={{ ...t(8.5, 400, GRAY), marginTop: 2 }}>retención</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <p style={{ ...t(12, 500, GRAY), textAlign: "center", marginTop: 16 }}>Dirección ve el panorama completo y resuelve lo que se escala.</p>
+    </div>
+  );
+}
+
+function Bell2({ size = 18, color = "#000" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+    </svg>
+  );
+}
+
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
